@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TrendCast Medi — আজকের ব্রেকিং নিউজ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f6f7f9;--card:#fff;--text:#16181d;--muted:#667085;--line:#e4e7ec;--brand:#d92d20;--brand2:#1d4ed8;--blue:#1d4ed8;--chip:#eef0f4;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0e1116;--card:#171b22;--text:#eceff4;--muted:#9aa4b2;--line:#262c36;--brand:#f04438;--brand2:#60a5fa;--blue:#2563eb;--chip:#222833;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#0e1116;--card:#171b22;--text:#eceff4;--muted:#9aa4b2;--line:#262c36;--brand:#f04438;--brand2:#60a5fa;--blue:#2563eb;--chip:#222833;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans Bengali",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header{background:var(--card);border-bottom:3px solid var(--brand);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.top{display:flex;align-items:center;gap:12px;padding:12px 0;flex-wrap:wrap}
+.logo{font-weight:700;font-size:1.5rem;letter-spacing:-.5px;color:var(--brand2);display:flex;align-items:center;gap:8px}
+.logo b{color:var(--brand)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--brand);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.date{color:var(--muted);font-size:.85rem;margin-left:auto}
+.tbtn{border:1px solid var(--line);background:var(--chip);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:.85rem}
+.ticker{background:var(--blue);color:#fff;display:flex;align-items:center;overflow:hidden}
+.ticker .lbl{background:var(--brand);padding:6px 14px;font-weight:700;white-space:nowrap;font-size:.9rem;z-index:1}
+.track{overflow:hidden;flex:1}
+.track div{display:inline-block;white-space:nowrap;padding-left:100%;animation:scroll 45s linear infinite;font-size:.92rem}
+.track span{margin-right:48px}
+@keyframes scroll{to{transform:translateX(-100%)}}
+.tools{display:flex;gap:10px;flex-wrap:wrap;padding:14px 0 6px;align-items:center}
+.search{flex:1;min-width:180px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);font:inherit}
+.cats{display:flex;gap:8px;overflow-x:auto;padding:8px 0 14px}
+.chip{border:1px solid var(--line);background:var(--chip);color:var(--text);padding:6px 14px;border-radius:999px;cursor:pointer;font:inherit;font-size:.88rem;white-space:nowrap}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.hero{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:16px;border-left:5px solid var(--brand)}
+.hero h2{margin:6px 0 8px;font-size:1.5rem;line-height:1.35}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;color:var(--brand);text-transform:uppercase}
+.meta{color:var(--muted);font-size:.8rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding-bottom:30px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.card h3{margin:0;font-size:1.05rem;line-height:1.4}
+.card p{margin:0;color:var(--muted);font-size:.92rem}
+.empty{text-align:center;color:var(--muted);padding:40px 0}
+.note{font-size:.78rem;color:var(--muted);background:var(--chip);border-radius:8px;padding:8px 12px;margin-bottom:14px}
+footer{border-top:1px solid var(--line);background:var(--card);padding:20px 0;color:var(--muted);font-size:.85rem;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <div class="logo"><span class="dot"></span>TrendCast <b>Medi</b></div>
+    <div class="date" id="date"></div>
+    <button class="tbtn" id="theme" aria-label="থিম পরিবর্তন">🌓</button>
+  </div>
+  <div class="ticker"><div class="lbl">ব্রেকিং</div><div class="track"><div id="tick"></div></div></div>
+</header>
+
+<main class="wrap">
+  <div class="tools">
+    <input class="search" id="q" type="search" placeholder="খবর খুঁজুন…">
+  </div>
+  <div class="cats" id="cats"></div>
+  <div class="note">ℹ️ এটি নমুনা সংবাদ। নিচের <code>NEWS</code> তালিকা সম্পাদনা করে বা লাইভ নিউজ API যুক্ত করে আসল খবর দেখানো যাবে।</div>
+  <section id="hero"></section>
+  <section class="grid" id="grid"></section>
+</main>
+
+<footer><div class="wrap">© <span id="yr"></span> TrendCast Medi — প্রতিদিনের ব্রেকিং নিউজ</div></footer>
+
+<script>
+// ✏️ এখানে খবর সম্পাদনা করুন (নমুনা তথ্য)
+var NEWS=[
+ {c:"জাতীয়",t:"সংসদে নতুন বাজেট আলোচনা শুরু, গুরুত্ব পাচ্ছে মূল্যস্ফীতি নিয়ন্ত্রণ",s:"নমুনা সংবাদ: আগামী অর্থবছরের পরিকল্পনা নিয়ে বিস্তারিত আলোচনা চলছে।",m:"১৫ মিনিট আগে",b:1},
+ {c:"আন্তর্জাতিক",t:"বিশ্বনেতাদের জলবায়ু সম্মেলনে নতুন অঙ্গীকারের ঘোষণা",s:"নমুনা সংবাদ: কার্বন নিঃসরণ কমাতে যৌথ উদ্যোগের কথা জানানো হয়েছে।",m:"৩২ মিনিট আগে",b:1},
+ {c:"অর্থনীতি",t:"শেয়ারবাজারে সপ্তাহের শুরুতে ইতিবাচক প্রবণতা",s:"নমুনা সংবাদ: প্রধান সূচক সামান্য বেড়ে লেনদেন শেষ হয়েছে।",m:"১ ঘণ্টা আগে",b:1},
+ {c:"প্রযুক্তি",t:"কৃত্রিম বুদ্ধিমত্তা ব্যবহারে নতুন নীতিমালার খসড়া প্রকাশ",s:"নমুনা সংবাদ: ডেটা সুরক্ষা ও স্বচ্ছতা নিয়ে নতুন নির্দেশনা আসছে।",m:"২ ঘণ্টা আগে",b:0},
+ {c:"খেলা",t:"রোমাঞ্চকর ম্যাচে শেষ মুহূর্তের গোলে জয় পেল স্বাগতিকরা",s:"নমুনা সংবাদ: দর্শকদের উচ্ছ্বাসে মুখর ছিল পুরো স্টেডিয়াম।",m:"৩ ঘণ্টা আগে",b:0},
+ {c:"বিনোদন",t:"নতুন চলচ্চিত্রের ট্রেলার প্রকাশ, দর্শকমহলে ব্যাপক সাড়া",s:"নমুনা সংবাদ: মুক্তির তারিখ নিয়ে আগ্রহ বাড়ছে।",m:"৪ ঘণ্টা আগে",b:0},
+ {c:"স্বাস্থ্য",t:"শীত মৌসুমে সর্দি-কাশি থেকে সুরক্ষায় বিশেষজ্ঞদের পরামর্শ",s:"নমুনা সংবাদ: পর্যাপ্ত বিশ্রাম ও পুষ্টিকর খাবারের ওপর জোর।",m:"৫ ঘণ্টা আগে",b:0},
+ {c:"জাতীয়",t:"রাজধানীতে যানজট কমাতে নতুন পরিকল্পনা ঘোষণা",s:"নমুনা সংবাদ: গণপরিবহন বাড়ানোর উদ্যোগ নেওয়া হচ্ছে।",m:"৬ ঘণ্টা আগে",b:0},
+ {c:"প্রযুক্তি",t:"নতুন স্মার্টফোনে উন্নত ব্যাটারি প্রযুক্তির ঘোষণা",s:"নমুনা সংবাদ: চার্জিং সময় উল্লেখযোগ্য কমার দাবি নির্মাতার।",m:"৮ ঘণ্টা আগে",b:0}
+];
+var CATS=["সব"].concat(NEWS.map(function(n){return n.c}).filter(function(v,i,a){return a.indexOf(v)===i}));
+var cur="সব",term="";
+var $=function(i){return document.getElementById(i)};
+function esc(x){return x.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+$("date").textContent=new Date().toLocaleDateString("bn-BD",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+$("yr").textContent=new Date().toLocaleDateString("bn-BD",{year:"numeric"});
+$("tick").innerHTML=NEWS.filter(function(n){return n.b}).map(function(n){return "<span>● "+esc(n.t)+"</span>"}).join("");
+
+function drawCats(){
+  $("cats").innerHTML=CATS.map(function(c){return '<button class="chip'+(c===cur?' on':'')+'" data-c="'+esc(c)+'">'+esc(c)+'</button>'}).join("");
+}
+function render(){
+  var list=NEWS.filter(function(n){
+    return (cur==="সব"||n.c===cur)&&(n.t+n.s).indexOf(term)>-1;
+  });
+  if(!list.length){$("hero").innerHTML="";$("grid").innerHTML='<div class="empty">কোনো খবর পাওয়া যায়নি।</div>';return}
+  var h=list[0],rest=list.slice(1);
+  $("hero").innerHTML='<article class="hero"><span class="tag">'+esc(h.c)+(h.b?' · ব্রেকিং':'')+'</span><h2>'+esc(h.t)+'</h2><p>'+esc(h.s)+'</p><div class="meta">'+esc(h.m)+'</div></article>';
+  $("grid").innerHTML=rest.map(function(n){
+    return '<article class="card"><span class="tag">'+esc(n.c)+(n.b?' · ব্রেকিং':'')+'</span><h3>'+esc(n.t)+'</h3><p>'+esc(n.s)+'</p><div class="meta">'+esc(n.m)+'</div></article>';
+  }).join("");
+}
+$("cats").addEventListener("click",function(e){
+  var c=e.target.getAttribute("data-c");
+  if(c){cur=c;drawCats();render()}
+});
+$("q").addEventListener("input",function(e){term=e.target.value.trim();render()});
+$("theme").addEventListener("click",function(){
+  var r=document.documentElement,dark=r.getAttribute("data-theme")==="dark"||(!r.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme: dark)").matches);
+  r.setAttribute("data-theme",dark?"light":"dark");
+});
+drawCats();render();
+</script>
+</body>
+</html>
